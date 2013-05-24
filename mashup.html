@@ -208,7 +208,7 @@
 			function compareWeather() {
 				date = $('#datepicker').datepicker('getDate');
 				town = $('#town').val();
-				$.get('weatherCompareService.php?day=' + date.getDate() + '&month=' + (date.getMonth() + 1) + '&year=' + date.getFullYear() + '&town=' + town, function(data) {
+				$.get('./phpservices/weatherCompareService.php?day=' + date.getDate() + '&month=' + (date.getMonth() + 1) + '&year=' + date.getFullYear() + '&town=' + town, function(data) {
 					weatherCompare = JSON.parse(data); $('#compare_weather').append('<h3>Weather data for ' + town + ':</h3><p class="container">' + weatherCompare.townText + '</span><br/><h3>Weather data for Reykjavik:</h3><p class="container">' + weatherCompare.vxuText) + '</span>';
 				});
 			}
