@@ -31,6 +31,5 @@
 		}
 	}
 
-
 	echo json_encode($entry);
 ?>
