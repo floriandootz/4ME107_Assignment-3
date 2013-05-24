@@ -1,0 +1,340 @@
+body {
+	margin: 0px;
+	font-family: arial;
+	font-size: 10px;
+	background-image: url("./img/bk.png");
+	background-attachment: scroll;
+}
+
+input {
+	margin-bottom: 4px;
+}
+
+button {
+	margin-top: 4px;
+}
+
+#ticon {
+	margin-left: 0px;
+	margin-top: -5px;
+	position: fixed;
+	z-index: 1;
+}
+
+#ticon img {
+	margin: 0px;
+	border: 0px;
+}
+
+#map_div {
+	margin: auto;
+	margin-top: 3px;
+	border: 3px solid #d0d0d0;
+	border-radius: 5px;
+	width: 80%;
+	height: 60%;
+}
+
+#fh .topic {
+	display: inline-block;
+	margin-bottom: 4px;
+	font-weight: bold;
+	width: 150px;
+	font-size: 11px;
+	padding: 3px;
+	border-bottom: 2px solid #d0d0d0;
+}
+
+.weather-description {
+	font-size: 11px;
+}
+
+#main {
+	margin: auto;
+	margin-top: 5px;
+	border: 0px solid #d0d0d0;
+	padding: 3px;
+	width: 800px;
+}
+
+#hotel_info {
+
+	margin: 0px;
+	font-size: 10px;
+	font-family: arial;
+	padding: 3px;
+	border: 1px solid #d0d0d0;
+	border-radius: 5px;
+	width: 95px;
+}
+
+#hi {
+	margin-top: -130px;
+	margin-left: 200px;
+	font-size: 10px;
+	font-family: arial;
+}
+#hi a {
+	font-size: 11px;
+	text-decoration: underline;
+	color: #000000;
+}
+
+#hi a:hover {
+	font-size: 11px;
+	text-decoration: none;
+	color: #000000;
+}
+
+#hi img {
+	border: 1px solid #d0d0d0;
+	padding: 2px;
+	border-radius: 3px
+}
+
+#hi th {
+	font-size: 11px;
+	font-family: arial;
+	/* font-weight: none; "none" WTF?*/
+}
+
+#weather {
+	margin: auto;
+	border: 0px solid #d0d0d0;
+	width: 80%;
+}
+
+#weather td {
+	background: #d0d0d0;
+	border: 1px solid #e5e5e5;
+	padding: 5px;
+	border-radius: 5px;
+}
+
+#weather .wf {
+
+	margin-top: 0px;
+	margin-left: 0px;
+	font-size: 11px;
+	font-family: arial;
+	font-weight: bold;
+	width: 180px;
+	padding: 3px;
+	padding: 3px;
+	border-bottom: 2px solid #d0d0d0;
+}
+
+#weather_table {
+
+	margin-top: 0px;
+	margin-left: 0px;
+	font-size: 10px;
+	font-family: arial;
+	padding: 2px;
+	border: 0px solid #d0d0d0;
+	border-radius: 3px;
+	width: 100%;
+	opacity: 0.7;
+}
+
+#weather_table .wd {
+	position: absolute;
+	margin-top: 25px;
+	margin-left: 0px;
+	border: 1px solid #d0d0d0;
+	width: 300px;
+	padding: 5px;
+	border-radius: 5px;
+	background: #efefef;
+}
+
+#weather_table .d {
+	font-weight: bold;
+	font-style: italic;
+}
+
+#cweather {
+	margin: auto;
+	width: 80%;
+	font-size: 10px;
+	font-family: arial;
+	border: 0px solid;
+	padding: 3px;
+}
+
+#fh {
+
+	margin: 0px;
+}
+
+#airport {
+	margin: 0px;
+	border: 1px solid #d0d0d0;
+	width: 200px;
+	padding: 3px;
+	border-radius: 5px;
+}
+
+#tweetstream {
+	margin: 0px;
+	width: 60%;
+	padding: 3px;
+	border-radius: 5px;
+	border: 1px solid #d0d0d0;
+}
+
+#tweetstream .bt {
+
+	font-weight: bold;
+}
+
+#compare_weather {
+	padding: 3px;
+	border: 0px solid #d0d0d0;
+	width: 300px;
+}
+
+#compare_weather .container {
+	border: 1px solid #d0d0d0;
+	border-radius: 3px;
+	padding: 3px;
+	border-radius: 3px;
+}
+
+#hotel {
+	margin: auto;
+	width: 80%;
+	font-size: 10px;
+	font-family: arial;
+	border: 0px solid #d0d0d0;
+	padding: 3px;
+}
+
+#books {
+	margin: auto;
+	width: 80%;
+	font-size: 10px;
+	font-family: arial;
+	border: 0px solid #d0d0d0;
+	padding: 3px;
+}
+
+#books .des {
+	font-size: 11px;
+	font-family: arial;
+	width: 150px;
+	font-weight: bold;
+	padding: 3px;
+	border-bottom: 2px solid #d0d0d0;
+}
+
+#content {
+	border: 1px solid #d0d0d0;
+	border-radius: 5px;
+	padding: 3px;
+	width: 200px;
+}
+
+#content a {
+	color: #000000;
+	text-decoration: underline;
+}
+
+#content a:hover {
+	color: #000000;
+	text-decoration: none;
+}
+
+#ap {
+	margin: auto;
+	width: 80%;
+	font-size: 10px;
+	font-family: arial;
+	border: 0px solid #d0d0d0;
+	padding: 3px;
+}
+
+#ap .des {
+	font-size: 11px;
+	font-family: arial;
+	width: 150px;
+	font-weight: bold;
+	padding: 3px;
+	border-bottom: 2px solid #d0d0d0;
+}
+
+#ap a {
+	text-decoration: underline;
+	color: #000000;
+}
+
+#ap a:hover {
+	text-decoration: none;
+}
+
+#ts {
+
+	margin: auto;
+	width: 80%;
+	font-size: 10px;
+	font-family: arial;
+	border: 0px solid #d0d0d0;
+	padding: 3px;
+}
+
+#ts .des {
+	font-size: 11px;
+	font-family: arial;
+	width: 150px;
+	font-weight: bold;
+	padding: 3px;
+	border-bottom: 2px solid #d0d0d0;
+}
+
+#tweetstream a {
+	font-size: 10px;
+	color: #000000;
+	text-decoration: underline;
+	/* font-weight: none; "none"? WTF? */
+}
+
+#tweetstream a:hover {
+	font-size: 12px;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+#tweetstream img {
+	border: 1px solid #d0d0d0;
+	padding: 2px;
+	border-radius: 3px;
+}
+
+#tweetstream img:hover {
+	border: 1px solid #acacac;
+	padding: 2px;
+	border-radius: 3px;
+}
+
+#cweather .cw .topic {
+	display: inline-block;
+	margin-bottom: 4px;
+	font-weight: bold;
+	width: 150px;
+	font-size: 11px;
+	padding: 3px;
+	border-bottom: 2px solid #d0d0d0;
+}
+
+#relimg img {
+	width: 100px;
+	height: 50px;
+	border: 1px solid #d0d0d0;
+	padding: 2px;
+	border-radius: 3px;
+}
+
+#relimg .fkapimg {
+	font-size: 10px;
+	font-family: arial;
+}
