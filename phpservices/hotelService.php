@@ -19,5 +19,6 @@
 			$result[] = $entry;
 		}
 	}
+	
 	echo json_encode($result);
 ?>
