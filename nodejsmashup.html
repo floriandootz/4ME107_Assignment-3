@@ -164,7 +164,7 @@
 				$("button.ghi").click(function() {
 					var content = "";
 					document.getElementById("hi").innerHTML = content;
-					var url = 'http://localhost:1337/x.json?priceMin=' + $('input.price_min').val() + '&priceMax=' + $('input.price_max').val();
+					var url = 'http://localhost:1337/?service=hotels&priceMin=' + $('input.price_min').val() + '&priceMax=' + $('input.price_max').val();
 						
 					$.ajax({
 	                    type: 'GET',
@@ -189,7 +189,7 @@
 			function compareWeather() {
 				date = $('#datepicker').datepicker('getDate');
 				town = $('#town').val();
-				var url = 'http://localhost:1337/?day=' + date.getDate() + '&month=' + (date.getMonth() + 1) + '&year=' + date.getFullYear() + '&town=' + town;
+				var url = 'http://localhost:1337/?service=weather&day=' + date.getDate() + '&month=' + (date.getMonth() + 1) + '&year=' + date.getFullYear() + '&town=' + town;
 				
 				$.ajax({
 					type: 'GET',
