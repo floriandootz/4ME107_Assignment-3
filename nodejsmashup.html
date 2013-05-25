@@ -1,0 +1,353 @@
+<html>
+	<head>
+		<title>Local activity support for Växjö</title>
+
+		<link href="./common/style.css" rel="stylesheet" type="text/css"/>
+		<script src="./common/functions.js"></script>
+		
+		<!-- EXTERNAL APIs -->
+		<script type="text/javascript" src="http://www.google.com/jsapi"></script> <!-- Google AJAX API. -->
+		<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script> <!--Google maps API-->
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
+		<script src="http://code.jquery.com/jquery-1.8.2.js"></script>
+		<script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=places"></script> <!-- Google Place library -->
+		
+		<script type="text/javascript">
+			//with setOnLoadCallback nothing starts before everything is ready
+			google.setOnLoadCallback(initialize);
+
+			var map;
+			var infowindow;
+			var iconimg = "./common/img/broom.png";
+			//icon for airports on google map
+			var fk = "./common/img/flikir.png";
+			//icon for images found from Flickr on google map
+			var apimg = "./common/img/apimg.png";
+			//icon for images found from Flickr assicoate with the name of different airports
+
+			function initialize() {
+				var pyrmont = new google.maps.LatLng(64.15, -21.95);
+				initTooltip();
+				initAutocomplete();
+				options = {
+					zoom : 12,
+					mapTypeId : google.maps.MapTypeId.SATELLITE
+				}
+				map = new google.maps.Map(document.getElementById("map_div"), options);
+				map.setCenter(new google.maps.LatLng(64.15, -21.95));
+
+				$(function() {
+					$("#datepicker").datepicker();
+				});
+
+				getWeatherData();
+				getFlickrImages();
+				getTwitterStream();
+				//load twitter search function
+				//load google place search function
+				var request = {
+					location : pyrmont,
+					radius : 100000,
+					types : ['airport']
+				};
+				infowindow = new google.maps.InfoWindow();
+				var service = new google.maps.places.PlacesService(map);
+				service.nearbySearch(request, callback);
+
+			}
+
+			function callback(results, status) {
+				if (status == google.maps.places.PlacesServiceStatus.OK) {
+					for (var i = 0; i < results.length; i++) {
+						createMarker(results[i]);
+						document.getElementById("airport").innerHTML += '<a href="javascript:here(\'' + results[i].name + '\')">' + results[i].name + '</a><br/>';
+						showImg(results[i].name);
+
+					}
+				}
+			}
+
+			//function which searches for images on Flickr that associate with the name of different airports
+			function here(location) {
+				var content = "<table class='fkapimg'>";
+				document.getElementById("relimg").innerHTML = "Images of " + location;
+
+				var api_key = "b427025ca7fe41bff1a85a05e1f0206e";
+				$.getJSON("http://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=" + api_key + "&text=" + location + "&per_page=500&format=json&jsoncallback=?", function(data) {
+					if (data.photos.photo.length == 0) {
+						content += "<tr><td>No images found</td></tr>";
+					} else {
+						for (var i = 0; i < data.photos.photo.length; i++) {
+
+							content += '<tr><td>' + (i + 1) + '. Title: ' + data.photos.photo[i].title + '</td></tr>';
+							content += '<tr><td><img src="http://farm' + data.photos.photo[i].farm + '.static.flickr.com/' + data.photos.photo[i].server + '/' + data.photos.photo[i].id + '_' + data.photos.photo[i].secret + '.jpg" />' + '</td></tr>';
+
+						}
+					}
+
+					content += "</table>";
+					$("#relimg").append(content);
+				});
+
+			}
+
+			//mark images associating with the name of different airports on google map
+			function showImg(name) {
+				api_key = "b427025ca7fe41bff1a85a05e1f0206e";
+				$.getJSON("http://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=" + api_key + "&text=" + name + "%20airport&per_page=200&format=json&jsoncallback=?", function(data) {
+
+					var infoWindow = new google.maps.InfoWindow();
+					$.each(data.photos.photo, function(i, item) {
+						$.getJSON('http://api.flickr.com/services/rest/?&method=flickr.photos.geo.getLocation&api_key=' + api_key + '&photo_id=' + item.id + '&format=json&jsoncallback=?', function(geoInfo) {
+							if (geoInfo.stat != 'fail') {
+								var marker = new google.maps.Marker({
+									map : map,
+									icon : apimg,
+									position : new google.maps.LatLng(geoInfo.photo.location.latitude, geoInfo.photo.location.longitude),
+									title : item.title
+								});
+								google.maps.event.addListener(marker, 'mouseover', function() {
+									infoWindow.setContent('<img width="160" src="http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '.jpg" />' + "<br/>" + item.title);
+									infoWindow.open(map, this);
+								});
+								google.maps.event.addListener(marker, 'mouseout', function() {
+
+									infoWindow.close(map, this);
+								});
+
+							}
+						});
+					});
+				});
+			}
+
+			function createMarker(place) {
+				var placeLoc = place.geometry.location;
+				var marker = new google.maps.Marker({
+					map : map,
+					icon : iconimg,
+					position : place.geometry.location,
+					title : place.name
+				});
+
+				google.maps.event.addListener(marker, 'click', function() {
+					infowindow.setContent("Airport - " + place.name);
+
+					infowindow.open(map, this);
+				});
+			}
+
+			function initTooltip() {
+				var setting = {
+					track : true
+				};
+				$(document).tooltip(setting);
+			}
+
+			function initAutocomplete() {
+				var availableTags = ['Växjö', 'Kalmar', 'Karlskrona', 'Malmö', 'Stockholm', 'Göteborg', 'Oslo', 'Amsterdam', 'Berlin', 'Hamburg', 'Rotterdam', 'Reykjavik', 'Maastricht', 'Bergen', 'Trondheim'];
+				$("#town").autocomplete({
+					source : availableTags
+				});
+			}
+
+
+			$.ajaxSetup({
+			  error: function(xhr, status, error) {
+			    alert("An AJAX error occured: " + status + "\nError: " + error);
+			  }
+			});
+
+			//click button to search for hotels
+			$(document).ready(function() {
+				$("button.ghi").click(function() {
+					var content = "";
+					document.getElementById("hi").innerHTML = content;
+					var url = 'http://localhost:1337/x.json?priceMin=' + $('input.price_min').val() + '&priceMax=' + $('input.price_max').val();
+						
+					$.ajax({
+	                    type: 'GET',
+	                    url: url,
+	                    dataType: 'jsonp',
+	                    crossDomain: true,
+	                    success : function (hotelInfo) {
+							content = '<table><tr><th>Name</th><th>Stars</th><th>Price</th><th>Image</th></tr>';
+							for (var hotel in hotelInfo) {
+								//content = hotelInfo[hotel].name + ' ' + hotelInfo[hotel].externalLink + ' ' + hotelInfo[hotel].stars + ' ' + hotelInfo[hotel].price + '<br />';
+								content += '<tr><td><a href="' + hotelInfo[hotel].externalLink + '" target="_blank"><center>' + hotelInfo[hotel].name + '</center></a></td><td><center>' + hotelInfo[hotel].stars + '</center></td><td><center>' + hotelInfo[hotel].price + '</center></td><td><center><img src="' + hotelInfo[hotel].image + '"></img></center></td></tr>';
+							}
+							content += '</table>';
+	
+							$('#hi').append(content);
+	                    }
+	                });
+				});
+			});
+			
+
+			function compareWeather() {
+				date = $('#datepicker').datepicker('getDate');
+				town = $('#town').val();
+				var url = 'http://localhost:1337/?day=' + date.getDate() + '&month=' + (date.getMonth() + 1) + '&year=' + date.getFullYear() + '&town=' + town;
+				
+				$.ajax({
+					type: 'GET',
+					url: url,
+					dataType: 'jsonp',
+					success: function(weatherCompare) {
+						$('#compare_weather').append('<h3>Weather data for ' + town + ':</h3><p class="container">' + weatherCompare.townText + '</span><br/><h3>Weather data for Reykjavik:</h3><p class="container">' + weatherCompare.vxuText + '</span>');
+					}
+				});
+			}
+		</script>
+	</head>
+
+	<body>
+		<div id="ticon">
+			<img src="./common/img/ir.png"></img>
+		</div>
+		<div id="map_div"></div>
+		<div id="weather">
+			<p class="wf">
+				Weather Forecast of Reykjavik:
+			</p>
+			<p id="weather_table"></p>
+			<script language="javascript">
+				$(document).ready(function() {
+					$("#weather_table").mouseenter(function() {
+						$("#weather_table").animate({
+							opacity : "1"
+						}, 500);
+
+					});
+					$("#weather_table").mouseleave(function() {
+						$("#weather_table").animate({
+							opacity : "0.7"
+						}, 500);
+					});
+				});
+			</script>
+		</div>
+
+		<div id="cweather">
+			<p class="cw">
+				<span class="topic">Compare weather for date:</span>
+				<br />
+				<input type="text" id="datepicker" placeholder="Enter date">
+				</input>
+				<br />
+				<input type="text" id="town" placeholder="Enter name of town">
+				</input>
+				<br />
+				<input type="button" onclick="compareWeather()" value="Compare" />
+			</p>
+			<p id="compare_weather"></p>
+		</div>
+
+		<div id="books">
+			<p class="des">
+				Books about Reykjavik:
+			</p>
+			<p id="content"></p>
+		</div>
+
+		<div id="ap">
+
+			<p class="des">
+				Airports in Iceland:
+			</p>
+			<p id="airport"></p>
+			<button class="hapimg">
+				hide images
+			</button>
+			<button class="shapimg">
+				show images
+			</button>
+			<script language="javascript">
+				$(document).ready(function() {
+					$(".hapimg").click(function() {
+						$("#relimg").slideUp("slow");
+					});
+
+					$(".shapimg").click(function() {
+						$("#relimg").slideDown("slow");
+					});
+				});
+
+			</script>
+			<p id="relimg"></p>
+
+			<script>
+				//get json file from Google Books API and display book name and author
+				function hot(response) {
+
+					for (var i = 0; i < response.items.length; i++) {
+						var allauth = "";
+						// in production code, item.text should have the HTML entities escaped.
+						document.getElementById("content").innerHTML += (i + 1) + ". <a href='" + response.items[i].accessInfo.webReaderLink + "' target='_blank'>" + response.items[i].volumeInfo.title + "</a> by ";
+						for (var auth = 0; auth < response.items[i].volumeInfo.authors.length; auth++) {
+							if (response.items[i].volumeInfo.authors.length == 1) {
+								allauth += response.items[i].volumeInfo.authors[auth];
+
+							} else if ((response.items[i].volumeInfo.authors.length - auth) == 1) {
+								allauth += response.items[i].volumeInfo.authors[auth];
+
+							} else {
+								allauth += response.items[i].volumeInfo.authors[auth] + " & ";
+							}
+						}
+						document.getElementById("content").innerHTML += allauth + "<br/>";
+					}
+				}
+			</script>
+			<script src="https://www.googleapis.com/books/v1/volumes?q=subject:Reykjavik&maxResults=40&key=AIzaSyD78AHvz3t8oQoo9cCfkamhsxAztZnNlrU&callback=hot"></script>
+		</div>
+
+		<div id="ts">
+			<p class="des">
+				Iceland on Twitter:
+			</p>
+			<p id="tweetstream"></p>
+		</div>
+
+		<div id="hotel">
+			<p id="fh">
+				<span class="topic">Find hotels in Reykjavik:</span>
+				<br/>
+				<input title="Enter the lowest price you're willing to pay for a hotel stay, for example 75 euros" type="text" size="10" class="price_min" placeholder="min. price">
+				</input>
+				<br/>
+				<input title="Enter the highest price you're willing to pay for a hotel stay, for example 120 euros" type="text" size="10" class="price_max" placeholder="max. price">
+				</input>
+				<br />
+				<button class="ghi">
+					Get Hotel Info
+				</button>
+			</p>
+			<script language="javascript">
+				$(document).ready(function() {
+					$(".hide").click(function() {
+						$("#hi").slideUp("slow");
+
+					});
+					$(".show").click(function() {
+						$("#hi").slideDown("slow");
+					});
+				});
+
+			</script>
+
+			<p id="hotel_info">
+				<button class='hide'>
+					hide
+				</button>
+				<button class='show'>
+					show
+				</button>
+			</p>
+			<p id="hi"></p>
+		</div>
+
+	</body>
+</html>
