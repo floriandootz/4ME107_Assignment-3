@@ -6,8 +6,8 @@ var weather = require('./weather.js');
 var hotels = require('./hotels.js');
 
 // Server Vars
-var ip = '127.0.0.1';
-var port = 1337;
+var ip = 'http://nodejsservice.eu01.aws.af.cm';
+var port = 80;
 
 var srv = http.createServer(function (req, res)
 {
